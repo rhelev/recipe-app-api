@@ -14,19 +14,21 @@ WORKDIR /app
 EXPOSE 8000
 
 ARG DEV=false
-RUN pip install --upgrade pip && \
+RUN apk update &&\
+    apk add gcc musl-dev postgresql-dev && \
+    pip install --upgrade pip && \
     pip install -r /tmp/requirements.txt && \
     if [ "$DEV" = "true" ]; then \
-        pip install -r /tmp/requirements.dev.txt; \
+    pip install -r /tmp/requirements.dev.txt; \
     fi  && \
     rm -rf /tmp && \
     adduser \
-        --disabled-password \
-        --no-create-home \
-        django-user
+    --disabled-password \
+    --no-create-home \
+    django-user
 RUN if [ "$DEV" = "true" ]; then \
-        echo "Development mode" > /var/log/mode.log; \
+    echo "Development mode" > /var/log/mode.log; \
     else \
-        echo "Production mode" > /var/log/mode.log; \
+    echo "Production mode" > /var/log/mode.log; \
     fi
 USER django-user
