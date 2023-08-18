@@ -21,7 +21,11 @@ RUN apk update &&\
     if [ "$DEV" = "true" ]; then \
     pip install -r /tmp/requirements.dev.txt; \
     fi  && \
-    adduser -u 1000 --disabled-password --gecos "" django-user && chown -R django-user /app
+    rm -rf /tmp && \
+    adduser \
+    --disabled-password \
+    --no-create-home \
+    django-user
 RUN if [ "$DEV" = "true" ]; then \
     echo "Development mode" > /var/log/mode.log; \
     else \
